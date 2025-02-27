@@ -11,7 +11,7 @@ config :novy_core,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :novy, Novy.Mailer, adapter: Swoosh.Adapters.Local
+config :novy_core, Novy.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configures Elixir's Logger
 config :logger, :console,
