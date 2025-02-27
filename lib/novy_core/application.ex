@@ -11,6 +11,7 @@ defmodule NovyCore.Application do
       # Starts a worker by calling: NovyCore.Worker.start_link(arg)
       # {NovyCore.Worker, arg}
       NovyCore.Repo,
+      {Finch, name: NovyCore.Finch}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
