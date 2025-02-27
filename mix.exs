@@ -26,8 +26,6 @@ defmodule NovyCore.MixProject do
       {:ecto, "~> 3.10"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
-      {:swoosh, "~> 1.5"},
-      {:finch, "~> 0.13"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}

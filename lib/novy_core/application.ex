@@ -10,7 +10,6 @@ defmodule NovyCore.Application do
     children = [
       # Starts a worker by calling: NovyCore.Worker.start_link(arg)
       # {NovyCore.Worker, arg}
-      {Finch, name: NovyCore.Finch}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
