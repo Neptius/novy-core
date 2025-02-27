@@ -10,7 +10,6 @@ defmodule NovyCore.Application do
     children = [
       # Starts a worker by calling: NovyCore.Worker.start_link(arg)
       # {NovyCore.Worker, arg}
-      NovyCore.Repo,
       {Finch, name: NovyCore.Finch}
     ]
 
