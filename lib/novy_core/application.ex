@@ -10,6 +10,15 @@ defmodule NovyCore.Application do
     children = [
       # Starts a worker by calling: NovyCore.Worker.start_link(arg)
       # {NovyCore.Worker, arg}
+
+      # Ajout du superviseur de tâches pour le parallélisme
+      {Task.Supervisor, name: NovyCore.TaskSupervisor, strategy: :one_for_one},
+
+      # Ajout du client GraphQL GenServer
+      NovyCore.Services.GraphQLClient,
+
+      # Ajout du pool Finch pour les requêtes HTTP
+      {Finch, name: NovyCore.Finch}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
