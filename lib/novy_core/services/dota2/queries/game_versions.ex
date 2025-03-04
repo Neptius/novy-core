@@ -3,7 +3,7 @@ defmodule NovyCore.Services.Dota2.Queries.GameVersions do
   Module contenant les requêtes GraphQL pour obtenir les versions de jeu de Dota 2.
   """
 
-  alias NovyCore.Services.GraphQLClient
+  alias NovyCore.APIClient
 
   @doc """
   Récupère les versions de jeu de Dota 2.
@@ -24,7 +24,7 @@ defmodule NovyCore.Services.Dota2.Queries.GameVersions do
     variables = %{}
 
     # Requête synchrone
-    case GraphQLClient.execute_query(:dota2, query, variables) do
+    case APIClient.async_request(:stratz, query, variables) do
       {:ok, response} -> IO.inspect(response, label: "Réponse synchrone")
       {:error, reason} -> IO.inspect(reason, label: "Erreur synchrone")
     end
