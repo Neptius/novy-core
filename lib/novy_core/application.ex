@@ -11,13 +11,9 @@ defmodule NovyCore.Application do
       # Starts a worker by calling: NovyCore.Worker.start_link(arg)
       # {NovyCore.Worker, arg}
 
-      {Cachex, name: NovyCore.Cache},
-      # Ajout du pool Finch pour les requêtes HTTP
       {Finch, name: NovyCore.Finch},
-      # GenServer principal qui gère les requêtes
-      NovyCore.APIClient,
-      # Superviseur dynamique
-      {DynamicSupervisor, strategy: :one_for_one, name: NovyCore.APIWorkerSupervisor}
+      {Cachex, name: NovyCore.Cache},
+      NovyCore.RateLimiter
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
