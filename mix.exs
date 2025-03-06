@@ -31,7 +31,10 @@ defmodule NovyCore.MixProject do
       {:finch, "~> 0.19"},
       {:jason, "~> 1.4"},
       {:hammer, "~> 7.0"},
-      {:slipstream, "~> 1.0"}
+      {:graphql_ws_client, "~> 2.0"},
+      {:gun, "~> 2.1"},
+      {:req, "~> 0.4.0"},
+      {:absinthe_client, "~> 0.1.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

@@ -8,6 +8,7 @@ defmodule NovyCore.ApiConfig do
       stratz: %{
         type: :graphql,
         base_url: "https://api.stratz.com/graphql",
+        ws_url: "wss://api.stratz.com/graphql",
         headers: [
           {"Content-Type", "application/json"},
           {"Authorization", "Bearer #{get_env(:novy_core, :stratz_api_key)}"},

@@ -15,6 +15,6 @@ defmodule NovyCore.Services.Dota2.Subscription.MatchCount do
     }
     """
 
-    NovyCore.GraphQLClient.subscribe(:stratz, subscription, %{})
+    # NovyCore.GraphQLClient.subscribe(:stratz, subscription, %{})
   end
 end

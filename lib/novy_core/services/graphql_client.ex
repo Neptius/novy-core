@@ -22,10 +22,6 @@ defmodule NovyCore.GraphQLClient do
     end
   end
 
-  def subscribe(api_name, subscription, variables \\ %{}, opts \\ []) do
-    config = ApiConfig.get_config(api_name)
-  end
-
   defp perform_request(api_name, query, variables, opts) do
     cache_key = generate_cache_key(api_name, query, variables)
 
