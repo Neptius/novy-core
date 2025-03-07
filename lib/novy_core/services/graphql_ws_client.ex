@@ -1,8 +1,7 @@
 defmodule NovyCore.GraphQLWSClient do
   use GenServer
-  require Logger
 
-  alias GraphQLWSClient.Event
+  require Logger
 
   ## ==============================
   ## PUBLIC API
@@ -28,8 +27,14 @@ defmodule NovyCore.GraphQLWSClient do
     #   ]
     # }
 
+    Logger.info("Ensuring Gun application is started...")
+
+    {:ok, _} = Application.ensure_all_started(:gun)
+
     Logger.info("Connecting to WebSocket...")
-    {:ok, socket} = GraphQLWSClient.start_link(url: "wss://api.stratz.com/graphql")
+
+    test = :gun.open("api.stratz.com", 443, %{})
+    IO.inspect(test)
 
     # Logger.info("Subscribing to MatchCount event...")
 
@@ -44,57 +49,9 @@ defmodule NovyCore.GraphQLWSClient do
 
     # Logger.info("Subscribed to MatchCount event with ID: #{subscription_id}")
 
-    {:ok,
-     %{
-       socket: socket,
-       # subscription_id: subscription_id,
-       monitor: Process.monitor(socket)
-     }}
-  end
-
-
-
-
-
-  @impl true
-  def terminate(_reason, %{socket: nil}), do: :ok
-
-  def terminate(_reason, %{socket: socket, subscription_id: subscription_id}) do
-    GraphQLWSClient.unsubscribe(socket, subscription_id)
+    {:ok, %{}}
   end
 
   @impl true
-  def handle_info(
-        {:DOWN, monitor, :process, socket, reason},
-        %{monitor: monitor, socket: socket} = state
-      ) do
-    IO.puts("Socket closed")
-    {:stop, reason, %{state | socket: nil, subscription_id: nil}}
-  end
-
-  def handle_info(
-        %Event{type: :complete, subscription_id: subscription_id},
-        %{subscription_id: subscription_id} = state
-      ) do
-    IO.puts("complete")
-    {:noreply, state}
-  end
-
-  def handle_info(
-        %Event{type: :next, subscription_id: subscription_id, payload: payload},
-        %{subscription_id: subscription_id} = state
-      ) do
-    IO.inspect(payload)
-    {:noreply, state}
-  end
-
-  def handle_info(
-        %Event{type: :error, subscription_id: subscription_id, payload: error},
-        %{subscription_id: subscription_id} = state
-      ) do
-    IO.inspect(error, label: "error")
-    {:noreply, state}
-  end
-
   def handle_info(_msg, state), do: {:noreply, state}
 end
