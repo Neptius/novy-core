@@ -14,6 +14,11 @@ defmodule NovyCore.ApiConfig do
           {"Authorization", "Bearer #{get_env(:novy_core, :stratz_api_key)}"},
           {"User-Agent", "STRATZ_API"}
         ],
+        headers2: %{
+          "Content-Type" => "application/json",
+          "Authorization" => "Bearer #{get_env(:novy_core, :stratz_api_key)}",
+          "User-Agent" => "STRATZ_API"
+        },
         timeout: 5000,
         retry_attempts: 3,
         rate_limit: :unlimited

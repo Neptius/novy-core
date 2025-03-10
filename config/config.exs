@@ -6,4 +6,6 @@ config :novy_core,
 
 config :novy_core, NovyCore.Finch, pools: %{default: [size: 10, count: 2]}
 
+config :req, :legacy_headers_as_lists, true
+
 import_config "#{config_env()}.exs"
