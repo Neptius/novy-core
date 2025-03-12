@@ -1,5 +1,8 @@
 import Config
 
+config :novy_core,
+  stratz_api_key: ""
+
 config :novy_core, NovyCore.Repo,
   database: "novy_core_repo",
   username: "postgres",

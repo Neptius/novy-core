@@ -11,15 +11,10 @@ defmodule NovyCore.ApiConfig do
         ws_url: "wss://api.stratz.com/graphql",
         headers: [
           {"Content-Type", "application/json"},
-          {"Authorization", "Bearer #{get_env(:novy_core, :stratz_api_key)}"},
+          {"Authorization", "Bearer #{Application.fetch_env!(:novy_core, :stratz_api_key)}"},
           {"User-Agent", "STRATZ_API"},
           {"Sec-WebSocket-Protocol", "graphql-transport-ws"}
         ],
-        headers2: %{
-          "Content-Type" => "application/json",
-          "Authorization" => "Bearer #{get_env(:novy_core, :stratz_api_key)}",
-          "User-Agent" => "STRATZ_API"
-        },
         timeout: 5000,
         retry_attempts: 3,
         rate_limit: :unlimited
@@ -34,10 +29,6 @@ defmodule NovyCore.ApiConfig do
         rate_limit: {10, :second}
       }
     }
-  end
-
-  defp get_env(app, key) do
-    Application.get_env(app, :config)[key] || raise "Missing config for #{key}"
   end
 
   def get_config(api) do

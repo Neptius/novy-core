@@ -1,5 +1,5 @@
 defmodule NovyCore.GraphQLWSClient do
-  @doc """
+  @moduledoc """
   GraphQL WebSocket Client
   """
   use WebSockex
@@ -11,13 +11,13 @@ defmodule NovyCore.GraphQLWSClient do
   @init_message %{type: "connection_init", payload: %{}}
 
   def start_link do
-    apiConfig = ApiConfig.get_config(:stratz)
-    ws_url = apiConfig[:ws_url]
-
+    api_config = ApiConfig.get_config(:stratz)
+    ws_url = api_config[:ws_url]
+    headers = api_config[:headers]
     state = %{}
 
     WebSockex.start_link(ws_url, __MODULE__, state,
-      extra_headers: apiConfig[:headers]
+      extra_headers: headers
       # debug: [:trace]
     )
   end
@@ -88,9 +88,10 @@ defmodule NovyCore.GraphQLWSClient do
   end
 
   def handle_disconnect(%{reason: {:local, reason}}, state) do
-    Logger.info("Local close with reason: #{inspect reason}")
+    Logger.info("Local close with reason: #{inspect(reason)}")
     {:ok, state}
   end
+
   def handle_disconnect(disconnect_map, state) do
     super(disconnect_map, state)
   end
