@@ -12,7 +12,8 @@ defmodule NovyCore.ApiConfig do
         headers: [
           {"Content-Type", "application/json"},
           {"Authorization", "Bearer #{get_env(:novy_core, :stratz_api_key)}"},
-          {"User-Agent", "STRATZ_API"}
+          {"User-Agent", "STRATZ_API"},
+          {"Sec-WebSocket-Protocol", "graphql-transport-ws"}
         ],
         headers2: %{
           "Content-Type" => "application/json",
