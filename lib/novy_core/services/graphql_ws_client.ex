@@ -11,47 +11,75 @@ defmodule NovyCore.GraphQLWSClient do
   @init_message %{type: "connection_init", payload: %{}}
 
   def start_link do
-    opts = []
     apiConfig = ApiConfig.get_config(:stratz)
     ws_url = apiConfig[:ws_url]
 
-    state = %{
-      subscriptions: %{},
-      next_id: 1,
-      ping_timer: nil,
-      connection_params: Keyword.get(opts, :connection_params, %{}),
-      on_connected: Keyword.get(opts, :on_connected)
-    }
+    state = %{}
 
     WebSockex.start_link(ws_url, __MODULE__, state,
-      extra_headers: apiConfig[:headers],
-      debug: [:trace],
-      handle_initial_conn_failure: true
+      extra_headers: apiConfig[:headers]
+      # debug: [:trace]
     )
+  end
+
+  def stop do
+    WebSockex.stop(__MODULE__)
   end
 
   def handle_connect(_conn, state) do
     Logger.info("Connected to GraphQL server")
-
     WebSockex.cast(self(), {:connection_init})
     {:ok, state}
   end
 
-
-  def handle_cast({:connection_init}, state) do
-    init_message = %{@init_message | payload: state.connection_params}
-    {:reply, {:text, Jason.encode!(init_message)}, state}
+  def handle_ping(_conn, state) do
+    Logger.info("Ping received")
+    {:ok, state}
   end
 
+  def handle_pong(_conn, state) do
+    Logger.info("Pong received")
+    {:ok, state}
+  end
 
+  def handle_cast({:connection_init}, state) do
+    {:reply, {:text, Jason.encode!(@init_message)}, state}
+  end
 
+  def handle_cast({:subscribe}, state) do
+    id = UUID.uuid4()
 
+    subscription_query = """
+    subscription {
+      matchCount {
+        matchCount
+      }
+    }
+    """
+
+    subscription_message = %{
+      type: "subscribe",
+      id: id,
+      payload: %{
+        query: subscription_query,
+        variables: %{}
+      }
+    }
+
+    {:reply, {:text, Jason.encode!(subscription_message)}, state}
+  end
 
   def handle_frame({:text, msg}, state) do
-    IO.inspect("handle_frame: text")
-    IO.inspect(msg)
+    case Jason.decode!(msg) do
+      %{"type" => "connection_ack"} ->
+        Logger.info("Connection acknowledged")
+        WebSockex.cast(self(), {:subscribe})
+        {:ok, state}
 
-    {:ok, state}
+      _ ->
+        Logger.info("Unhandled message: #{msg}")
+        {:ok, state}
+    end
   end
 
   def handle_info(_, state) do
