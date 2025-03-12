@@ -25,16 +25,27 @@ defmodule NovyCore.GraphQLWSClient do
 
     WebSockex.start_link(ws_url, __MODULE__, state,
       extra_headers: apiConfig[:headers],
-      debug: [:trace]
+      debug: [:trace],
+      handle_initial_conn_failure: true
     )
   end
 
   def handle_connect(_conn, state) do
     Logger.info("Connected to GraphQL server")
 
+    WebSockex.cast(self(), {:connection_init})
+    {:ok, state}
+  end
+
+
+  def handle_cast({:connection_init}, state) do
     init_message = %{@init_message | payload: state.connection_params}
     {:reply, {:text, Jason.encode!(init_message)}, state}
   end
+
+
+
+
 
   def handle_frame({:text, msg}, state) do
     IO.inspect("handle_frame: text")

@@ -31,6 +31,7 @@ defmodule NovyCore.MixProject do
       {:finch, "~> 0.19"},
       {:jason, "~> 1.4"},
       {:hammer, "~> 7.0"},
+      {:gun, "~> 2.0"},
       {:req, "~> 0.5.8"},
       {:websockex, "~> 0.5.0", hex: :websockex_wt}
       # {:dep_from_hexpm, "~> 0.3.0"},
