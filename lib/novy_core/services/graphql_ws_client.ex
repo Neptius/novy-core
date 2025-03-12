@@ -22,8 +22,8 @@ defmodule NovyCore.GraphQLWSClient do
     )
   end
 
-  def stop do
-    WebSockex.stop(__MODULE__)
+  def stop(pid) do
+    WebSockex.cast(pid, {:close})
   end
 
   def handle_connect(_conn, state) do
@@ -69,6 +69,11 @@ defmodule NovyCore.GraphQLWSClient do
     {:reply, {:text, Jason.encode!(subscription_message)}, state}
   end
 
+  def handle_cast({:close}, state) do
+    Logger.info("Closing connection")
+    {:close, state}
+  end
+
   def handle_frame({:text, msg}, state) do
     case Jason.decode!(msg) do
       %{"type" => "connection_ack"} ->
@@ -82,8 +87,11 @@ defmodule NovyCore.GraphQLWSClient do
     end
   end
 
-  def handle_info(_, state) do
-    Logger.info("handle_info")
+  def handle_disconnect(%{reason: {:local, reason}}, state) do
+    Logger.info("Local close with reason: #{inspect reason}")
     {:ok, state}
+  end
+  def handle_disconnect(disconnect_map, state) do
+    super(disconnect_map, state)
   end
 end
